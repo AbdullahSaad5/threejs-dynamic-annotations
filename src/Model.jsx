@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const Model = () => {
-  const MODEL_URL = "/cane.glb";
+  const MODEL_URL = "/skeleton.glb";
   const { scene } = useGLTF(MODEL_URL);
   const { gl, scene: mainScene, camera } = useThree();
   const [raycaster] = useState(() => new THREE.Raycaster());
@@ -22,13 +22,19 @@ const Model = () => {
 
       if (intersects.length > 0) {
         const intersect = intersects[0];
-        const annotation = {
-          id: Math.random(), // Unique ID
-          position: intersect.point.clone(),
-          name: intersect.object.name,
-        };
 
-        setAnnotations((prevAnnotations) => [...prevAnnotations, annotation]);
+        // Check if annotation already exists
+        const annotationExists = annotations.some((annotation) => annotation.name === intersect.object.name);
+
+        if (!annotationExists) {
+          const annotation = {
+            id: Math.random(), // Unique ID
+            position: intersect.point.clone(),
+            name: intersect.object.name,
+          };
+
+          setAnnotations((prevAnnotations) => [...prevAnnotations, annotation]);
+        }
       }
     };
 
@@ -37,7 +43,7 @@ const Model = () => {
     return () => {
       gl.domElement.removeEventListener("click", handleClick);
     };
-  }, [gl, mainScene, camera, mouse, raycaster]);
+  }, [gl, mainScene, camera, mouse, raycaster, annotations]);
 
   return (
     <>
@@ -67,8 +73,8 @@ const HtmlAnnotation = ({ position, name }) => {
         padding: "1px 3px", // Adjust padding accordingly
         borderRadius: "2px", // Adjust border radius accordingly
         pointerEvents: "none",
-        fontSize: `${scale}em`, // Scale font size dynamically
-        transform: `translate(-50%, -50%) scale(${scale * 0.5})`, // Scale based on zoom
+        fontSize: `${0.8 * scale}em`, // Scale font size dynamically
+        transform: `translate(-50%, -50%) scale(${scale * 0.8})`, // Scale based on zoom
         whiteSpace: "nowrap",
       }}
     >

@@ -11,7 +11,7 @@ function App() {
   return (
     <Canvas shadows>
       <Model />
-      <color attach="background" args={["#9301e9"]} />
+      <color attach="background" args={["#000"]} />
       <ambientLight intensity={2} />
       <directionalLight position={[2, 4, 2]} intensity={0.5} castShadow />
       <PerspectiveCamera
